@@ -1,0 +1,73 @@
+{
+  "repo": "netreplay",
+  "language": "JavaScript",
+  "category": "Networking",
+  "goal": "Replay connection events through deterministic state-machine transitions.",
+  "review_model": {
+    "terms": [
+      "packet span",
+      "retry pressure",
+      "route drift",
+      "socket risk"
+    ],
+    "lanes": [
+      "ship",
+      "watch",
+      "hold"
+    ],
+    "score": "signal * 2 + slack + confidence - drag * 3",
+    "purpose": "surface the domain-specific cases that need the most careful review"
+  },
+  "cases": [
+    {
+      "name": "baseline",
+      "focus": "packet span",
+      "signal": 66,
+      "slack": 47,
+      "drag": 21,
+      "confidence": 90,
+      "score": 206,
+      "lane": "ship"
+    },
+    {
+      "name": "stress",
+      "focus": "retry pressure",
+      "signal": 51,
+      "slack": 47,
+      "drag": 24,
+      "confidence": 93,
+      "score": 170,
+      "lane": "ship"
+    },
+    {
+      "name": "edge",
+      "focus": "route drift",
+      "signal": 72,
+      "slack": 34,
+      "drag": 32,
+      "confidence": 94,
+      "score": 176,
+      "lane": "ship"
+    },
+    {
+      "name": "recovery",
+      "focus": "socket risk",
+      "signal": 77,
+      "slack": 47,
+      "drag": 25,
+      "confidence": 82,
+      "score": 208,
+      "lane": "ship"
+    },
+    {
+      "name": "stale",
+      "focus": "packet span",
+      "signal": 60,
+      "slack": 30,
+      "drag": 13,
+      "confidence": 79,
+      "score": 190,
+      "lane": "ship"
+    }
+  ]
+}
