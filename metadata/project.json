@@ -1,0 +1,32 @@
+{
+  "index": 42,
+  "phase": 1,
+  "batch": 5,
+  "name": "netreplay",
+  "planned_name": "netreplay",
+  "language": "JavaScript",
+  "category": "Networking",
+  "goal": "Replay connection events through deterministic state-machine transitions.",
+  "repository_url": "https://github.com/ZachL111/netreplay",
+  "verification_command": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/verify.ps1",
+  "model": {
+    "inputs": [
+      "demand",
+      "capacity",
+      "latency",
+      "risk",
+      "weight"
+    ],
+    "threshold": 165,
+    "risk_penalty": 7,
+    "latency_penalty": 2,
+    "weight_bonus": 4,
+    "decision_rule": "accept when score is greater than or equal to threshold, otherwise review"
+  },
+  "quality_gates": [
+    "readme constraint scan",
+    "fixture presence check",
+    "metadata JSON parse",
+    "language verifier"
+  ]
+}

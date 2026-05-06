@@ -1,43 +1,69 @@
 # netreplay
 
-netreplay is a JavaScript project for networking. It focuses on this technical goal: Replay connection events through deterministic state-machine transitions.
+`netreplay` is a focused JavaScript codebase around replay connection events through deterministic state-machine transitions. It is meant to be easy to inspect, run, and extend without a hosted service.
 
-## Why it exists
+## Netreplay Walkthrough
 
-Small engineering tools are easiest to trust when their rules are explicit, testable, and cheap to run locally. This repository packages a focused model with fixture data and a local verification path so behavior can be reviewed without external services.
+I would read the project from the outside in: command, fixture, model, then roadmap. That keeps the networking idea grounded in files that can be checked locally.
 
-## Features
+## Reason For The Project
 
-- Deterministic policy scoring over fixture scenarios.
-- Clear accept or review decisions based on a documented threshold.
-- A command-line or local test path for quick validation.
-- Golden fixture data for repeatable checks.
-- Minimal dependencies and a compact project layout.
+The repository exists to keep a technical idea small enough to reason about. The implementation avoids external dependencies where possible, then uses fixtures to make changes easy to review.
 
-## Architecture Notes
+## Capabilities
 
-The core module exposes a small scoring API. Inputs are simple numeric signals: demand, capacity, latency, risk, and weight. The score uses a threshold of 165, risk penalty 7, latency penalty 2, and weight bonus 4. Tests exercise the public API against the fixture cases in `fixtures/cases.csv`.
+- Models packet shape with deterministic scoring and explicit review decisions.
+- Uses fixture data to keep socket state changes visible in code review.
+- Includes extended examples for retry behavior, including `surge` and `degraded`.
+- Documents policy decisions tradeoffs in `docs/operations.md`.
+- Runs locally with a single verification command and no external credentials.
 
-## Setup
+## How It Is Put Together
 
-Install the JavaScript toolchain and run commands from the repository root.
+The design is intentionally direct: parse or construct a signal, score it, classify it, and verify the expected branch. This makes the repository useful for studying networking behavior without needing a service or database unless the language project itself is SQL. The JavaScript version uses native modules and a small Node test path.
 
-## Usage
+## Where Things Live
+
+- `src`: primary implementation
+- `tests`: verification harness
+- `fixtures`: compact golden scenarios
+- `examples`: expanded scenario set
+- `metadata`: project constants and verification metadata
+- `docs`: operations and extension notes
+- `scripts`: local verification and audit commands
+- `package.json`: Node package scripts
+
+## Getting It Running
+
+The only required setup is the local JavaScript toolchain. After cloning, stay in the repo root so fixture paths resolve correctly.
+
+## Command Examples
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File scripts/verify.ps1
 ```
 
-The verification script builds or runs the project and checks the fixture decisions.
+This runs the language-level build or test path against the compact fixture set.
 
-## Tests
+## Check The Work
 
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File scripts/verify.ps1
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/audit.ps1
 ```
 
-## Limitations And Roadmap
+The audit command checks repository structure and README constraints before it delegates to the verifier.
 
-- The fixture set is intentionally small so it can be audited by hand.
-- Future work could add richer domain-specific input adapters.
-- The model is a local demonstration and does not claim production use.
+## Data Notes
+
+`baseline` is the first example I would inspect because it lands on the `review` path with a score of 120. The broader file also keeps `degraded` at -5 and `surge` at 225, which gives the model a useful low-to-high spread.
+
+## Tradeoffs
+
+This code is local-first. It makes no claim about deployed usage and avoids credentials, hosted state, and environment-specific setup.
+
+## Possible Extensions
+
+- Add a loader for `examples/extended_cases.csv` and promote selected cases into the language test suite.
+- Add a short report command that prints the score breakdown for a single scenario.
+- Add malformed input fixtures so the failure path is as visible as the happy path.
+- Add one more networking fixture that focuses on a malformed or borderline input.
